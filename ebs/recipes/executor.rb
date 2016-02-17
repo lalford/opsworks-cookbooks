@@ -19,8 +19,19 @@ node[:ebs][:targets].each do |target|
     ruby_block "run #{full_cmd}" do
         block do
             Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)
-            output = shell_out(full_cmd)
-            Chef::Log::info(output)
+            result = shell_out(full_cmd)
+            status = result.status
+            stdout = result.stdout
+            stderr = result.stderr
+
+            if status.success?
+                Chef::Log::info("----- begin stdout -----\n#{stdout}\n----- end stdout -----")
+                Chef::Log::info("----- begin stderr -----\n#{stderr}\n----- end stderr -----")
+            else
+                Chef::Log::error("----- begin stdout -----\n#{stdout}\n----- end stdout -----")
+                Chef::Log::error("----- begin stderr -----\n#{stderr}\n----- end stderr -----")
+                Chef::Application.fatal!("failed executing resource [#{full_cmd}]", status.exitstatus)
+            end
         end
     end
 
