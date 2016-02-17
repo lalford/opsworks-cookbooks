@@ -16,7 +16,15 @@ node[:ebs][:targets].each do |target|
         full_cmd = "#{full_cmd} #{target[:args]}"
     end
 
-    execute "run #{full_cmd}" do
-        command "#{script_path}/#{full_cmd}"
+    ruby_block "run #{full_cmd}" do
+        block do
+            Chef::Resource::RubyBlock.send(:include, Chef::Mixin::ShellOut)
+            output = shell_out(full_cmd)
+            Chef::Log::info(output)
+        end
     end
+
+    #execute "run #{full_cmd}" do
+    #    command "#{script_path}/#{full_cmd}"
+    #end
 end
