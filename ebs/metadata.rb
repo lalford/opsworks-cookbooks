@@ -6,3 +6,4 @@ version     "1.0.0"
 
 recipe "ebs::volumes", "Mounts attached EBS volumes"
 recipe "ebs::raids", "Mounts attached EBS RAIDs"
+recipe "ebs::executor", "Experiment with running some managed scripts"

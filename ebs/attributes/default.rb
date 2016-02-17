@@ -14,6 +14,8 @@
 # See also: http://docs.aws.amazon.com/opsworks/latest/userguide/customizing.html
 ###
 
+default[:ebs][:targets] = []
+
 default[:ebs][:devices] ||= {}
 default[:ebs][:raids] ||= {}
 default[:ebs][:mdadm_chunk_size] = '256'
