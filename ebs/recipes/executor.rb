@@ -25,12 +25,17 @@ node[:ebs][:targets].each do |target|
             stderr = result.stderr
 
             if status.success?
-                Chef::Log::info("----- begin stdout -----\n#{stdout}\n----- end stdout -----")
-                Chef::Log::info("----- begin stderr -----\n#{stderr}\n----- end stderr -----")
+                Chef::Log.info("----- begin stdout -----")
+                stdout.split("\n").each { |line| Chef::Log.info(line) }
+                Chef::Log.info("----- end stdout -----")
             else
-                Chef::Log::error("----- begin stdout -----\n#{stdout}\n----- end stdout -----")
-                Chef::Log::error("----- begin stderr -----\n#{stderr}\n----- end stderr -----")
-                Chef::Application.fatal!("failed executing resource [#{full_cmd}]", status.exitstatus)
+                Chef::Log.error("----- begin stdout -----")
+                stdout.split("\n").each { |line| Chef::Log.error(line) }
+                Chef::Log.error("----- end stdout -----")
+                Chef::Log.error("----- begin stderr -----")
+                stderr.split("\n").each { |line| Chef::Log.error(line) }
+                Chef::Log.error("----- end stderr -----")
+                Chef::Application.fatal!("failed executing resource [#{full_cmd}], exit code #{status.exitstatus}", status.exitstatus)
             end
         end
     end
